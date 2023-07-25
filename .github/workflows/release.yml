@@ -1,8 +1,8 @@
 name: Release
 on:
   push:
-    branch:
-      - main
+    tags:        
+      - '*' 
 
 permissions:
   contents: write
