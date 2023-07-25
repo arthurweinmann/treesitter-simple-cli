@@ -34,7 +34,7 @@ all: build
 
 .PHONY: build 
 build: $(BUILDDIR) check-generic-dep
-	cd $(CURDIR) && cargo build --release && mv $(CURDIR)/target/release/treesittercli $(BUILDDIR)
+	cd $(CURDIR) && cargo build --release && mv -f $(CURDIR)/target/release/treesittercli $(BUILDDIR)
 
 $(BUILDDIR):
 	@mkdir -p $(BUILDDIR)

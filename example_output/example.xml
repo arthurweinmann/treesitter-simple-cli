@@ -1,0 +1,2846 @@
+<source_file>
+  <inner_attribute_item>#![
+    <attribute>
+      <identifier>cfg_attr</identifier>
+
+      <token_tree type="arguments">(
+        <identifier>debug_assertions</identifier>
+
+        <identifier>allow</identifier>
+
+        <token_tree>(
+          <identifier>dead_code</identifier>
+
+          <identifier>unused_imports</identifier>
+)</token_tree>
+)</token_tree>
+</attribute>
+]</inner_attribute_item>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <identifier type="path">std</identifier>
+::
+      <identifier type="name">env</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <scoped_identifier type="path">
+        <identifier type="path">std</identifier>
+::
+        <identifier type="name">fmt</identifier>
+</scoped_identifier>
+::
+      <identifier type="name">Debug</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <identifier type="path">std</identifier>
+::
+      <identifier type="name">fs</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <identifier type="path">std</identifier>
+::
+      <identifier type="name">io</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <scoped_identifier type="path">
+        <identifier type="path">std</identifier>
+::
+        <identifier type="name">io</identifier>
+</scoped_identifier>
+::
+      <identifier type="name">Write</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <scoped_identifier type="path">
+        <identifier type="path">std</identifier>
+::
+        <identifier type="name">path</identifier>
+</scoped_identifier>
+::
+      <identifier type="name">Path</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <identifier type="path">std</identifier>
+::
+      <identifier type="name">process</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <scoped_identifier type="path">
+        <scoped_identifier type="path">
+          <identifier type="path">std</identifier>
+::
+          <identifier type="name">sync</identifier>
+</scoped_identifier>
+::
+        <identifier type="name">atomic</identifier>
+</scoped_identifier>
+::
+      <identifier type="name">AtomicUsize</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_identifier type="argument">
+      <scoped_identifier type="path">
+        <identifier type="path">std</identifier>
+::
+        <identifier type="name">time</identifier>
+</scoped_identifier>
+::
+      <identifier type="name">Instant</identifier>
+</scoped_identifier>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_use_list type="argument">
+      <identifier type="path">std</identifier>
+::
+      <use_list type="list">{
+        <identifier>fmt</identifier>
+,
+        <identifier>usize</identifier>
+}</use_list>
+</scoped_use_list>
+;</use_declaration>
+
+  <use_declaration>use
+    <scoped_use_list type="argument">
+      <identifier type="path">tree_sitter</identifier>
+::
+      <use_list type="list">{
+        <identifier>InputEdit</identifier>
+,
+        <identifier>Language</identifier>
+,
+        <identifier>LogType</identifier>
+,
+        <identifier>Parser</identifier>
+,
+        <identifier>Point</identifier>
+,
+        <identifier>Tree</identifier>
+}</use_list>
+</scoped_use_list>
+;</use_declaration>
+
+  <function_item>fn
+    <identifier type="name">read_file</identifier>
+
+    <parameters type="parameters">(
+      <parameter>
+        <identifier type="pattern">path</identifier>
+:
+        <reference_type type="type">&amp;
+          <primitive_type type="type">str</primitive_type>
+</reference_type>
+</parameter>
+)</parameters>
+-&gt;
+    <generic_type type="return_type">
+      <scoped_type_identifier type="type">
+        <identifier type="path">io</identifier>
+::
+        <type_identifier type="name">Result</type_identifier>
+</scoped_type_identifier>
+
+      <type_arguments type="type_arguments">&lt;
+        <generic_type>
+          <type_identifier type="type">Vec</type_identifier>
+
+          <type_arguments type="type_arguments">&lt;
+            <primitive_type>u8</primitive_type>
+&gt;</type_arguments>
+</generic_type>
+&gt;</type_arguments>
+</generic_type>
+
+    <block type="body">{
+      <let_declaration>let
+        <identifier type="pattern">contents</identifier>
+=
+        <try_expression type="value">
+          <call_expression>
+            <scoped_identifier type="function">
+              <identifier type="path">fs</identifier>
+::
+              <identifier type="name">read</identifier>
+</scoped_identifier>
+
+            <arguments type="arguments">(
+              <identifier>path</identifier>
+)</arguments>
+</call_expression>
+?</try_expression>
+;</let_declaration>
+
+      <call_expression>
+        <identifier type="function">Ok</identifier>
+
+        <arguments type="arguments">(
+          <identifier>contents</identifier>
+)</arguments>
+</call_expression>
+}</block>
+</function_item>
+
+  <line_comment>// Print error messages to stderr before exiting so programs calling this cli can detect it easily</line_comment>
+
+  <macro_definition>macro_rules!
+    <identifier type="name">error_exit</identifier>
+{
+    <macro_rule>
+      <token_tree_pattern type="left">(
+        <token_binding_pattern>
+          <metavariable type="name">$msg</metavariable>
+:
+          <fragment_specifier type="type">expr</fragment_specifier>
+</token_binding_pattern>
+
+        <token_repetition_pattern>$(
+          <token_binding_pattern>
+            <metavariable type="name">$arg</metavariable>
+:
+            <fragment_specifier type="type">expr</fragment_specifier>
+</token_binding_pattern>
+)*</token_repetition_pattern>
+)</token_tree_pattern>
+=&gt;
+      <token_tree type="right">{
+        <token_tree>{
+          <identifier>eprintln</identifier>
+
+          <token_tree>(
+            <metavariable>$msg</metavariable>
+
+            <token_repetition>$(
+              <metavariable>$arg</metavariable>
+)*</token_repetition>
+)</token_tree>
+
+          <identifier>process</identifier>
+
+          <identifier>exit</identifier>
+
+          <token_tree>(
+            <integer_literal>1</integer_literal>
+)</token_tree>
+}</token_tree>
+}</token_tree>
+</macro_rule>
+}</macro_definition>
+
+  <function_item>fn
+    <identifier type="name">main</identifier>
+
+    <parameters type="parameters">()</parameters>
+
+    <block type="body">{
+      <line_comment>// Vector to store the arguments passed in the command line.</line_comment>
+
+      <let_declaration>let
+        <identifier type="pattern">args</identifier>
+:
+        <generic_type type="type">
+          <type_identifier type="type">Vec</type_identifier>
+
+          <type_arguments type="type_arguments">&lt;
+            <type_identifier>String</type_identifier>
+&gt;</type_arguments>
+</generic_type>
+=
+        <call_expression type="value">
+          <field_expression type="function">
+            <call_expression type="value">
+              <scoped_identifier type="function">
+                <identifier type="path">env</identifier>
+::
+                <identifier type="name">args</identifier>
+</scoped_identifier>
+
+              <arguments type="arguments">()</arguments>
+</call_expression>
+.
+            <field_identifier type="field">collect</field_identifier>
+</field_expression>
+
+          <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+      <expression_statement>
+        <if_expression>if
+          <binary_expression type="condition">
+            <call_expression type="left">
+              <field_expression type="function">
+                <identifier type="value">args</identifier>
+.
+                <field_identifier type="field">len</field_identifier>
+</field_expression>
+
+              <arguments type="arguments">()</arguments>
+</call_expression>
+&lt;
+            <integer_literal type="right">3</integer_literal>
+</binary_expression>
+
+          <block type="consequence">{
+            <expression_statement>
+              <if_expression>if
+                <binary_expression type="condition">
+                  <binary_expression type="left">
+                    <binary_expression type="left">
+                      <index_expression type="left">
+                        <identifier>args</identifier>
+[
+                        <integer_literal>1</integer_literal>
+]</index_expression>
+==
+                      <string_literal type="right">""</string_literal>
+</binary_expression>
+||
+                    <binary_expression type="right">
+                      <index_expression type="left">
+                        <identifier>args</identifier>
+[
+                        <integer_literal>1</integer_literal>
+]</index_expression>
+==
+                      <string_literal type="right">""</string_literal>
+</binary_expression>
+</binary_expression>
+||
+                  <binary_expression type="right">
+                    <index_expression type="left">
+                      <identifier>args</identifier>
+[
+                      <integer_literal>1</integer_literal>
+]</index_expression>
+==
+                    <string_literal type="right">""</string_literal>
+</binary_expression>
+</binary_expression>
+
+                <block type="consequence">{
+                  <expression_statement>
+                    <macro_invocation>
+                      <identifier type="macro">println</identifier>
+!
+                      <token_tree>(
+                        <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+
+                  <expression_statement>
+                    <call_expression>
+                      <scoped_identifier type="function">
+                        <identifier type="path">process</identifier>
+::
+                        <identifier type="name">exit</identifier>
+</scoped_identifier>
+
+                      <arguments type="arguments">(
+                        <integer_literal>0</integer_literal>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+            <expression_statement>
+              <macro_invocation>
+                <identifier type="macro">error_exit</identifier>
+!
+                <token_tree>(
+                  <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+      <line_comment>// Parse string arguments</line_comment>
+
+      <let_declaration>let
+        <identifier type="pattern">language_arg</identifier>
+=
+        <reference_expression type="value">&amp;
+          <index_expression type="value">
+            <identifier>args</identifier>
+[
+            <integer_literal>1</integer_literal>
+]</index_expression>
+</reference_expression>
+;</let_declaration>
+
+      <let_declaration>let
+        <identifier type="pattern">sourcepath_arg</identifier>
+=
+        <reference_expression type="value">&amp;
+          <index_expression type="value">
+            <identifier>args</identifier>
+[
+            <integer_literal>2</integer_literal>
+]</index_expression>
+</reference_expression>
+;</let_declaration>
+
+      <let_declaration>let
+        <mutable_specifier>mut</mutable_specifier>
+
+        <identifier type="pattern">format</identifier>
+=
+        <reference_expression type="value">&amp;
+          <call_expression type="value">
+            <scoped_identifier type="function">
+              <identifier type="path">String</identifier>
+::
+              <identifier type="name">from</identifier>
+</scoped_identifier>
+
+            <arguments type="arguments">(
+              <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+</reference_expression>
+;</let_declaration>
+
+      <expression_statement>
+        <if_expression>if
+          <binary_expression type="condition">
+            <call_expression type="left">
+              <field_expression type="function">
+                <identifier type="value">args</identifier>
+.
+                <field_identifier type="field">len</field_identifier>
+</field_expression>
+
+              <arguments type="arguments">()</arguments>
+</call_expression>
+==
+            <integer_literal type="right">4</integer_literal>
+</binary_expression>
+
+          <block type="consequence">{
+            <expression_statement>
+              <assignment_expression>
+                <identifier type="left">format</identifier>
+=
+                <reference_expression type="right">&amp;
+                  <index_expression type="value">
+                    <identifier>args</identifier>
+[
+                    <integer_literal>3</integer_literal>
+]</index_expression>
+</reference_expression>
+</assignment_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+      <expression_statement>
+        <if_expression>if
+          <binary_expression type="condition">
+            <binary_expression type="left">
+              <identifier type="left">format</identifier>
+!=
+              <string_literal type="right">""</string_literal>
+</binary_expression>
+&amp;&amp;
+            <binary_expression type="right">
+              <identifier type="left">format</identifier>
+!=
+              <string_literal type="right">""</string_literal>
+</binary_expression>
+</binary_expression>
+
+          <block type="consequence">{
+            <expression_statement>
+              <macro_invocation>
+                <identifier type="macro">error_exit</identifier>
+!
+                <token_tree>(
+                  <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+      <let_declaration>let
+        <mutable_specifier>mut</mutable_specifier>
+
+        <identifier type="pattern">parser</identifier>
+=
+        <call_expression type="value">
+          <scoped_identifier type="function">
+            <identifier type="path">Parser</identifier>
+::
+            <identifier type="name">new</identifier>
+</scoped_identifier>
+
+          <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+      <expression_statement>
+        <match_expression>match
+          <call_expression type="value">
+            <field_expression type="function">
+              <identifier type="value">language_arg</identifier>
+.
+              <field_identifier type="field">as_ref</field_identifier>
+</field_expression>
+
+            <arguments type="arguments">()</arguments>
+</call_expression>
+
+          <match_block type="body">{
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_rust</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_go</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_javascript</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_python</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_c</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_cpp</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_swift</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <string_literal>""</string_literal>
+</match_pattern>
+=&gt;
+              <call_expression type="value">
+                <field_expression type="function">
+                  <call_expression type="value">
+                    <field_expression type="function">
+                      <identifier type="value">parser</identifier>
+.
+                      <field_identifier type="field">set_language</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">(
+                      <call_expression>
+                        <scoped_identifier type="function">
+                          <identifier type="path">tree_sitter_html</identifier>
+::
+                          <identifier type="name">language</identifier>
+</scoped_identifier>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+.
+                  <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <reference_pattern>&amp;_</reference_pattern>
+</match_pattern>
+=&gt;
+              <macro_invocation type="value">
+                <identifier type="macro">error_exit</identifier>
+!
+                <token_tree>(
+                  <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+,</match_arm>
+}</match_block>
+</match_expression>
+</expression_statement>
+
+      <let_declaration>let
+        <identifier type="pattern">source_code</identifier>
+=
+        <match_expression type="value">match
+          <call_expression type="value">
+            <identifier type="function">read_file</identifier>
+
+            <arguments type="arguments">(
+              <identifier>sourcepath_arg</identifier>
+)</arguments>
+</call_expression>
+
+          <match_block type="body">{
+            <match_arm>
+              <match_pattern type="pattern">
+                <tuple_struct_pattern>
+                  <identifier type="type">Ok</identifier>
+(
+                  <identifier>contents</identifier>
+)</tuple_struct_pattern>
+</match_pattern>
+=&gt;
+              <identifier type="value">contents</identifier>
+,</match_arm>
+
+            <match_arm>
+              <match_pattern type="pattern">
+                <tuple_struct_pattern>
+                  <identifier type="type">Err</identifier>
+(
+                  <identifier>err</identifier>
+)</tuple_struct_pattern>
+</match_pattern>
+=&gt;
+              <macro_invocation type="value">
+                <identifier type="macro">error_exit</identifier>
+!
+                <token_tree>(
+                  <string_literal>""</string_literal>
+
+                  <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+,</match_arm>
+}</match_block>
+</match_expression>
+;</let_declaration>
+
+      <let_declaration>let
+        <identifier type="pattern">tree</identifier>
+=
+        <call_expression type="value">
+          <field_expression type="function">
+            <call_expression type="value">
+              <field_expression type="function">
+                <identifier type="value">parser</identifier>
+.
+                <field_identifier type="field">parse</field_identifier>
+</field_expression>
+
+              <arguments type="arguments">(
+                <reference_expression>&amp;
+                  <identifier type="value">source_code</identifier>
+</reference_expression>
+,
+                <identifier>None</identifier>
+)</arguments>
+</call_expression>
+.
+            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+          <arguments type="arguments">(
+            <closure_expression>
+              <closure_parameters type="parameters">||</closure_parameters>
+
+              <block type="body">{
+                <expression_statement>
+                  <macro_invocation>
+                    <identifier type="macro">error_exit</identifier>
+!
+                    <token_tree>(
+                      <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</let_declaration>
+
+      <line_comment>// let root_node = tree.root_node();</line_comment>
+
+      <let_declaration>let
+        <identifier type="pattern">stdout</identifier>
+=
+        <call_expression type="value">
+          <scoped_identifier type="function">
+            <identifier type="path">io</identifier>
+::
+            <identifier type="name">stdout</identifier>
+</scoped_identifier>
+
+          <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+      <let_declaration>let
+        <mutable_specifier>mut</mutable_specifier>
+
+        <identifier type="pattern">stdout</identifier>
+=
+        <call_expression type="value">
+          <field_expression type="function">
+            <identifier type="value">stdout</identifier>
+.
+            <field_identifier type="field">lock</field_identifier>
+</field_expression>
+
+          <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+      <let_declaration>let
+        <mutable_specifier>mut</mutable_specifier>
+
+        <identifier type="pattern">cursor</identifier>
+=
+        <call_expression type="value">
+          <field_expression type="function">
+            <identifier type="value">tree</identifier>
+.
+            <field_identifier type="field">walk</field_identifier>
+</field_expression>
+
+          <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+      <expression_statement>
+        <if_expression>if
+          <binary_expression type="condition">
+            <identifier type="left">format</identifier>
+==
+            <string_literal type="right">""</string_literal>
+</binary_expression>
+
+          <block type="consequence">{
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">needs_newline</identifier>
+=
+              <boolean_literal type="value">false</boolean_literal>
+;</let_declaration>
+
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">indent_level</identifier>
+=
+              <integer_literal type="value">0</integer_literal>
+;</let_declaration>
+
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">did_visit_children</identifier>
+=
+              <boolean_literal type="value">false</boolean_literal>
+;</let_declaration>
+
+            <expression_statement>
+              <loop_expression>loop
+                <block type="body">{
+                  <let_declaration>let
+                    <identifier type="pattern">node</identifier>
+=
+                    <call_expression type="value">
+                      <field_expression type="function">
+                        <identifier type="value">cursor</identifier>
+.
+                        <field_identifier type="field">node</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                  <let_declaration>let
+                    <identifier type="pattern">is_named</identifier>
+=
+                    <call_expression type="value">
+                      <field_expression type="function">
+                        <identifier type="value">node</identifier>
+.
+                        <field_identifier type="field">is_named</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                  <expression_statement>
+                    <if_expression>if
+                      <identifier type="condition">did_visit_children</identifier>
+
+                      <block type="consequence">{
+                        <expression_statement>
+                          <if_expression>if
+                            <identifier type="condition">is_named</identifier>
+
+                            <block type="consequence">{
+                              <expression_statement>
+                                <call_expression>
+                                  <field_expression type="function">
+                                    <call_expression type="value">
+                                      <field_expression type="function">
+                                        <identifier type="value">stdout</identifier>
+.
+                                        <field_identifier type="field">write</field_identifier>
+</field_expression>
+
+                                      <arguments type="arguments">(
+                                        <string_literal>b""</string_literal>
+)</arguments>
+</call_expression>
+.
+                                    <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">(
+                                    <closure_expression>
+                                      <closure_parameters type="parameters">|
+                                        <identifier>err</identifier>
+|</closure_parameters>
+
+                                      <block type="body">{
+                                        <expression_statement>
+                                          <macro_invocation>
+                                            <identifier type="macro">error_exit</identifier>
+!
+                                            <token_tree>(
+                                              <string_literal>""</string_literal>
+
+                                              <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                              <expression_statement>
+                                <assignment_expression>
+                                  <identifier type="left">needs_newline</identifier>
+=
+                                  <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                        <expression_statement>
+                          <if_expression>if
+                            <call_expression type="condition">
+                              <field_expression type="function">
+                                <identifier type="value">cursor</identifier>
+.
+                                <field_identifier type="field">goto_next_sibling</field_identifier>
+</field_expression>
+
+                              <arguments type="arguments">()</arguments>
+</call_expression>
+
+                            <block type="consequence">{
+                              <expression_statement>
+                                <assignment_expression>
+                                  <identifier type="left">did_visit_children</identifier>
+=
+                                  <boolean_literal type="right">false</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+
+                            <else_clause type="alternative">else
+                              <if_expression>if
+                                <call_expression type="condition">
+                                  <field_expression type="function">
+                                    <identifier type="value">cursor</identifier>
+.
+                                    <field_identifier type="field">goto_parent</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">()</arguments>
+</call_expression>
+
+                                <block type="consequence">{
+                                  <expression_statement>
+                                    <assignment_expression>
+                                      <identifier type="left">did_visit_children</identifier>
+=
+                                      <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+
+                                  <expression_statement>
+                                    <compound_assignment_expr>
+                                      <identifier type="left">indent_level</identifier>
+-=
+                                      <integer_literal type="right">1</integer_literal>
+</compound_assignment_expr>
+;</expression_statement>
+}</block>
+
+                                <else_clause type="alternative">else
+                                  <block>{
+                                    <expression_statement>
+                                      <break_expression>break</break_expression>
+;</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+
+                      <else_clause type="alternative">else
+                        <block>{
+                          <expression_statement>
+                            <if_expression>if
+                              <identifier type="condition">is_named</identifier>
+
+                              <block type="consequence">{
+                                <expression_statement>
+                                  <if_expression>if
+                                    <identifier type="condition">needs_newline</identifier>
+
+                                    <block type="consequence">{
+                                      <expression_statement>
+                                        <call_expression>
+                                          <field_expression type="function">
+                                            <call_expression type="value">
+                                              <field_expression type="function">
+                                                <identifier type="value">stdout</identifier>
+.
+                                                <field_identifier type="field">write</field_identifier>
+</field_expression>
+
+                                              <arguments type="arguments">(
+                                                <string_literal>b"
+                                                  <escape_sequence>\n</escape_sequence>
+"</string_literal>
+)</arguments>
+</call_expression>
+.
+                                            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                          <arguments type="arguments">(
+                                            <closure_expression>
+                                              <closure_parameters type="parameters">|
+                                                <identifier>err</identifier>
+|</closure_parameters>
+
+                                              <block type="body">{
+                                                <expression_statement>
+                                                  <macro_invocation>
+                                                    <identifier type="macro">error_exit</identifier>
+!
+                                                    <token_tree>(
+                                                      <string_literal>""</string_literal>
+
+                                                      <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                                <expression_statement>
+                                  <for_expression>for_in
+                                    <range_expression type="value">
+                                      <integer_literal>0</integer_literal>
+..
+                                      <identifier>indent_level</identifier>
+</range_expression>
+
+                                    <block type="body">{
+                                      <expression_statement>
+                                        <call_expression>
+                                          <field_expression type="function">
+                                            <call_expression type="value">
+                                              <field_expression type="function">
+                                                <identifier type="value">stdout</identifier>
+.
+                                                <field_identifier type="field">write</field_identifier>
+</field_expression>
+
+                                              <arguments type="arguments">(
+                                                <string_literal>b""</string_literal>
+)</arguments>
+</call_expression>
+.
+                                            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                          <arguments type="arguments">(
+                                            <closure_expression>
+                                              <closure_parameters type="parameters">|
+                                                <identifier>err</identifier>
+|</closure_parameters>
+
+                                              <block type="body">{
+                                                <expression_statement>
+                                                  <macro_invocation>
+                                                    <identifier type="macro">error_exit</identifier>
+!
+                                                    <token_tree>(
+                                                      <string_literal>""</string_literal>
+
+                                                      <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</for_expression>
+</expression_statement>
+
+                                <let_declaration>let
+                                  <identifier type="pattern">start</identifier>
+:
+                                  <type_identifier type="type">Point</type_identifier>
+=
+                                  <call_expression type="value">
+                                    <field_expression type="function">
+                                      <identifier type="value">node</identifier>
+.
+                                      <field_identifier type="field">start_position</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                                <let_declaration>let
+                                  <identifier type="pattern">end</identifier>
+:
+                                  <type_identifier type="type">Point</type_identifier>
+=
+                                  <call_expression type="value">
+                                    <field_expression type="function">
+                                      <identifier type="value">node</identifier>
+.
+                                      <field_identifier type="field">end_position</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                                <expression_statement>
+                                  <if_expression>if
+                                    <let_condition type="condition">let
+                                      <tuple_struct_pattern type="pattern">
+                                        <identifier type="type">Some</identifier>
+(
+                                        <identifier>field_name</identifier>
+)</tuple_struct_pattern>
+=
+                                      <call_expression type="value">
+                                        <field_expression type="function">
+                                          <identifier type="value">cursor</identifier>
+.
+                                          <field_identifier type="field">field_name</field_identifier>
+</field_expression>
+
+                                        <arguments type="arguments">()</arguments>
+</call_expression>
+</let_condition>
+
+                                    <block type="consequence">{
+                                      <expression_statement>
+                                        <call_expression>
+                                          <field_expression type="function">
+                                            <macro_invocation type="value">
+                                              <identifier type="macro">write</identifier>
+!
+                                              <token_tree>(
+                                                <mutable_specifier>mut</mutable_specifier>
+
+                                                <identifier>stdout</identifier>
+
+                                                <string_literal>""</string_literal>
+
+                                                <identifier>field_name</identifier>
+)</token_tree>
+</macro_invocation>
+.
+                                            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                          <arguments type="arguments">(
+                                            <closure_expression>
+                                              <closure_parameters type="parameters">|
+                                                <identifier>err</identifier>
+|</closure_parameters>
+
+                                              <block type="body">{
+                                                <expression_statement>
+                                                  <macro_invocation>
+                                                    <identifier type="macro">error_exit</identifier>
+!
+                                                    <token_tree>(
+                                                      <string_literal>""</string_literal>
+
+                                                      <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                                <expression_statement>
+                                  <call_expression>
+                                    <field_expression type="function">
+                                      <macro_invocation type="value">
+                                        <identifier type="macro">write</identifier>
+!
+                                        <token_tree>(
+                                          <mutable_specifier>mut</mutable_specifier>
+
+                                          <identifier>stdout</identifier>
+
+                                          <string_literal>""</string_literal>
+
+                                          <identifier>node</identifier>
+
+                                          <identifier>kind</identifier>
+
+                                          <token_tree>()</token_tree>
+
+                                          <identifier>start</identifier>
+
+                                          <identifier>row</identifier>
+
+                                          <identifier>start</identifier>
+
+                                          <identifier>column</identifier>
+
+                                          <identifier>end</identifier>
+
+                                          <identifier>row</identifier>
+
+                                          <identifier>end</identifier>
+
+                                          <identifier>column</identifier>
+)</token_tree>
+</macro_invocation>
+.
+                                      <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">(
+                                      <closure_expression>
+                                        <closure_parameters type="parameters">|
+                                          <identifier>err</identifier>
+|</closure_parameters>
+
+                                        <block type="body">{
+                                          <expression_statement>
+                                            <macro_invocation>
+                                              <identifier type="macro">error_exit</identifier>
+!
+                                              <token_tree>(
+                                                <string_literal>""</string_literal>
+
+                                                <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                                <expression_statement>
+                                  <assignment_expression>
+                                    <identifier type="left">needs_newline</identifier>
+=
+                                    <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                          <expression_statement>
+                            <if_expression>if
+                              <call_expression type="condition">
+                                <field_expression type="function">
+                                  <identifier type="value">cursor</identifier>
+.
+                                  <field_identifier type="field">goto_first_child</field_identifier>
+</field_expression>
+
+                                <arguments type="arguments">()</arguments>
+</call_expression>
+
+                              <block type="consequence">{
+                                <expression_statement>
+                                  <assignment_expression>
+                                    <identifier type="left">did_visit_children</identifier>
+=
+                                    <boolean_literal type="right">false</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+
+                                <expression_statement>
+                                  <compound_assignment_expr>
+                                    <identifier type="left">indent_level</identifier>
++=
+                                    <integer_literal type="right">1</integer_literal>
+</compound_assignment_expr>
+;</expression_statement>
+}</block>
+
+                              <else_clause type="alternative">else
+                                <block>{
+                                  <expression_statement>
+                                    <assignment_expression>
+                                      <identifier type="left">did_visit_children</identifier>
+=
+                                      <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+</loop_expression>
+</expression_statement>
+
+            <expression_statement>
+              <call_expression>
+                <field_expression type="function">
+                  <identifier type="value">cursor</identifier>
+.
+                  <field_identifier type="field">reset</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <call_expression>
+                    <field_expression type="function">
+                      <identifier type="value">tree</identifier>
+.
+                      <field_identifier type="field">root_node</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+            <expression_statement>
+              <macro_invocation>
+                <identifier type="macro">println</identifier>
+!
+                <token_tree>(
+                  <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+      <expression_statement>
+        <if_expression>if
+          <binary_expression type="condition">
+            <identifier type="left">format</identifier>
+==
+            <string_literal type="right">""</string_literal>
+</binary_expression>
+
+          <block type="consequence">{
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">needs_newline</identifier>
+=
+              <boolean_literal type="value">false</boolean_literal>
+;</let_declaration>
+
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">indent_level</identifier>
+=
+              <integer_literal type="value">0</integer_literal>
+;</let_declaration>
+
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">did_visit_children</identifier>
+=
+              <boolean_literal type="value">false</boolean_literal>
+;</let_declaration>
+
+            <let_declaration>let
+              <mutable_specifier>mut</mutable_specifier>
+
+              <identifier type="pattern">tags</identifier>
+:
+              <generic_type type="type">
+                <type_identifier type="type">Vec</type_identifier>
+
+                <type_arguments type="type_arguments">&lt;
+                  <reference_type>&amp;
+                    <primitive_type type="type">str</primitive_type>
+</reference_type>
+&gt;</type_arguments>
+</generic_type>
+=
+              <call_expression type="value">
+                <scoped_identifier type="function">
+                  <identifier type="path">Vec</identifier>
+::
+                  <identifier type="name">new</identifier>
+</scoped_identifier>
+
+                <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+            <expression_statement>
+              <loop_expression>loop
+                <block type="body">{
+                  <let_declaration>let
+                    <identifier type="pattern">node</identifier>
+=
+                    <call_expression type="value">
+                      <field_expression type="function">
+                        <identifier type="value">cursor</identifier>
+.
+                        <field_identifier type="field">node</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                  <let_declaration>let
+                    <identifier type="pattern">is_named</identifier>
+=
+                    <call_expression type="value">
+                      <field_expression type="function">
+                        <identifier type="value">node</identifier>
+.
+                        <field_identifier type="field">is_named</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                  <expression_statement>
+                    <if_expression>if
+                      <identifier type="condition">did_visit_children</identifier>
+
+                      <block type="consequence">{
+                        <expression_statement>
+                          <if_expression>if
+                            <identifier type="condition">is_named</identifier>
+
+                            <block type="consequence">{
+                              <let_declaration>let
+                                <identifier type="pattern">tag</identifier>
+=
+                                <call_expression type="value">
+                                  <field_expression type="function">
+                                    <identifier type="value">tags</identifier>
+.
+                                    <field_identifier type="field">pop</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                              <expression_statement>
+                                <call_expression>
+                                  <field_expression type="function">
+                                    <macro_invocation type="value">
+                                      <identifier type="macro">write</identifier>
+!
+                                      <token_tree>(
+                                        <mutable_specifier>mut</mutable_specifier>
+
+                                        <identifier>stdout</identifier>
+
+                                        <string_literal>"
+                                          <escape_sequence>\n</escape_sequence>
+"</string_literal>
+
+                                        <identifier>tag</identifier>
+
+                                        <identifier>expect</identifier>
+
+                                        <token_tree>(
+                                          <string_literal>""</string_literal>
+)</token_tree>
+)</token_tree>
+</macro_invocation>
+.
+                                    <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">(
+                                    <closure_expression>
+                                      <closure_parameters type="parameters">|
+                                        <identifier>err</identifier>
+|</closure_parameters>
+
+                                      <block type="body">{
+                                        <expression_statement>
+                                          <macro_invocation>
+                                            <identifier type="macro">error_exit</identifier>
+!
+                                            <token_tree>(
+                                              <string_literal>""</string_literal>
+
+                                              <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                              <expression_statement>
+                                <assignment_expression>
+                                  <identifier type="left">needs_newline</identifier>
+=
+                                  <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                        <expression_statement>
+                          <if_expression>if
+                            <call_expression type="condition">
+                              <field_expression type="function">
+                                <identifier type="value">cursor</identifier>
+.
+                                <field_identifier type="field">goto_next_sibling</field_identifier>
+</field_expression>
+
+                              <arguments type="arguments">()</arguments>
+</call_expression>
+
+                            <block type="consequence">{
+                              <expression_statement>
+                                <assignment_expression>
+                                  <identifier type="left">did_visit_children</identifier>
+=
+                                  <boolean_literal type="right">false</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+
+                            <else_clause type="alternative">else
+                              <if_expression>if
+                                <call_expression type="condition">
+                                  <field_expression type="function">
+                                    <identifier type="value">cursor</identifier>
+.
+                                    <field_identifier type="field">goto_parent</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">()</arguments>
+</call_expression>
+
+                                <block type="consequence">{
+                                  <expression_statement>
+                                    <assignment_expression>
+                                      <identifier type="left">did_visit_children</identifier>
+=
+                                      <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+
+                                  <expression_statement>
+                                    <compound_assignment_expr>
+                                      <identifier type="left">indent_level</identifier>
+-=
+                                      <integer_literal type="right">1</integer_literal>
+</compound_assignment_expr>
+;</expression_statement>
+}</block>
+
+                                <else_clause type="alternative">else
+                                  <block>{
+                                    <expression_statement>
+                                      <break_expression>break</break_expression>
+;</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+
+                      <else_clause type="alternative">else
+                        <block>{
+                          <expression_statement>
+                            <if_expression>if
+                              <identifier type="condition">is_named</identifier>
+
+                              <block type="consequence">{
+                                <expression_statement>
+                                  <if_expression>if
+                                    <identifier type="condition">needs_newline</identifier>
+
+                                    <block type="consequence">{
+                                      <expression_statement>
+                                        <call_expression>
+                                          <field_expression type="function">
+                                            <call_expression type="value">
+                                              <field_expression type="function">
+                                                <identifier type="value">stdout</identifier>
+.
+                                                <field_identifier type="field">write</field_identifier>
+</field_expression>
+
+                                              <arguments type="arguments">(
+                                                <string_literal>b"
+                                                  <escape_sequence>\n</escape_sequence>
+"</string_literal>
+)</arguments>
+</call_expression>
+.
+                                            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                          <arguments type="arguments">(
+                                            <closure_expression>
+                                              <closure_parameters type="parameters">|
+                                                <identifier>err</identifier>
+|</closure_parameters>
+
+                                              <block type="body">{
+                                                <expression_statement>
+                                                  <macro_invocation>
+                                                    <identifier type="macro">error_exit</identifier>
+!
+                                                    <token_tree>(
+                                                      <string_literal>""</string_literal>
+
+                                                      <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                                <expression_statement>
+                                  <for_expression>for_in
+                                    <range_expression type="value">
+                                      <integer_literal>0</integer_literal>
+..
+                                      <identifier>indent_level</identifier>
+</range_expression>
+
+                                    <block type="body">{
+                                      <expression_statement>
+                                        <call_expression>
+                                          <field_expression type="function">
+                                            <call_expression type="value">
+                                              <field_expression type="function">
+                                                <identifier type="value">stdout</identifier>
+.
+                                                <field_identifier type="field">write</field_identifier>
+</field_expression>
+
+                                              <arguments type="arguments">(
+                                                <string_literal>b""</string_literal>
+)</arguments>
+</call_expression>
+.
+                                            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                          <arguments type="arguments">(
+                                            <closure_expression>
+                                              <closure_parameters type="parameters">|
+                                                <identifier>err</identifier>
+|</closure_parameters>
+
+                                              <block type="body">{
+                                                <expression_statement>
+                                                  <macro_invocation>
+                                                    <identifier type="macro">error_exit</identifier>
+!
+                                                    <token_tree>(
+                                                      <string_literal>""</string_literal>
+
+                                                      <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</for_expression>
+</expression_statement>
+
+                                <expression_statement>
+                                  <call_expression>
+                                    <field_expression type="function">
+                                      <macro_invocation type="value">
+                                        <identifier type="macro">write</identifier>
+!
+                                        <token_tree>(
+                                          <mutable_specifier>mut</mutable_specifier>
+
+                                          <identifier>stdout</identifier>
+
+                                          <string_literal>""</string_literal>
+
+                                          <identifier>node</identifier>
+
+                                          <identifier>kind</identifier>
+
+                                          <token_tree>()</token_tree>
+)</token_tree>
+</macro_invocation>
+.
+                                      <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">(
+                                      <closure_expression>
+                                        <closure_parameters type="parameters">|
+                                          <identifier>err</identifier>
+|</closure_parameters>
+
+                                        <block type="body">{
+                                          <expression_statement>
+                                            <macro_invocation>
+                                              <identifier type="macro">error_exit</identifier>
+!
+                                              <token_tree>(
+                                                <string_literal>""</string_literal>
+
+                                                <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                                <expression_statement>
+                                  <if_expression>if
+                                    <let_condition type="condition">let
+                                      <tuple_struct_pattern type="pattern">
+                                        <identifier type="type">Some</identifier>
+(
+                                        <identifier>field_name</identifier>
+)</tuple_struct_pattern>
+=
+                                      <call_expression type="value">
+                                        <field_expression type="function">
+                                          <identifier type="value">cursor</identifier>
+.
+                                          <field_identifier type="field">field_name</field_identifier>
+</field_expression>
+
+                                        <arguments type="arguments">()</arguments>
+</call_expression>
+</let_condition>
+
+                                    <block type="consequence">{
+                                      <expression_statement>
+                                        <call_expression>
+                                          <field_expression type="function">
+                                            <macro_invocation type="value">
+                                              <identifier type="macro">write</identifier>
+!
+                                              <token_tree>(
+                                                <mutable_specifier>mut</mutable_specifier>
+
+                                                <identifier>stdout</identifier>
+
+                                                <string_literal>"
+                                                  <escape_sequence>\"</escape_sequence>
+
+                                                  <escape_sequence>\"</escape_sequence>
+"</string_literal>
+
+                                                <identifier>field_name</identifier>
+)</token_tree>
+</macro_invocation>
+.
+                                            <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                          <arguments type="arguments">(
+                                            <closure_expression>
+                                              <closure_parameters type="parameters">|
+                                                <identifier>err</identifier>
+|</closure_parameters>
+
+                                              <block type="body">{
+                                                <expression_statement>
+                                                  <macro_invocation>
+                                                    <identifier type="macro">error_exit</identifier>
+!
+                                                    <token_tree>(
+                                                      <string_literal>""</string_literal>
+
+                                                      <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                                <expression_statement>
+                                  <call_expression>
+                                    <field_expression type="function">
+                                      <macro_invocation type="value">
+                                        <identifier type="macro">write</identifier>
+!
+                                        <token_tree>(
+                                          <mutable_specifier>mut</mutable_specifier>
+
+                                          <identifier>stdout</identifier>
+
+                                          <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+.
+                                      <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">(
+                                      <closure_expression>
+                                        <closure_parameters type="parameters">|
+                                          <identifier>err</identifier>
+|</closure_parameters>
+
+                                        <block type="body">{
+                                          <expression_statement>
+                                            <macro_invocation>
+                                              <identifier type="macro">error_exit</identifier>
+!
+                                              <token_tree>(
+                                                <string_literal>""</string_literal>
+
+                                                <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                                <expression_statement>
+                                  <call_expression>
+                                    <field_expression type="function">
+                                      <identifier type="value">tags</identifier>
+.
+                                      <field_identifier type="field">push</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">(
+                                      <call_expression>
+                                        <field_expression type="function">
+                                          <identifier type="value">node</identifier>
+.
+                                          <field_identifier type="field">kind</field_identifier>
+</field_expression>
+
+                                        <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                                <expression_statement>
+                                  <assignment_expression>
+                                    <identifier type="left">needs_newline</identifier>
+=
+                                    <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+                          <expression_statement>
+                            <if_expression>if
+                              <call_expression type="condition">
+                                <field_expression type="function">
+                                  <identifier type="value">cursor</identifier>
+.
+                                  <field_identifier type="field">goto_first_child</field_identifier>
+</field_expression>
+
+                                <arguments type="arguments">()</arguments>
+</call_expression>
+
+                              <block type="consequence">{
+                                <expression_statement>
+                                  <assignment_expression>
+                                    <identifier type="left">did_visit_children</identifier>
+=
+                                    <boolean_literal type="right">false</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+
+                                <expression_statement>
+                                  <compound_assignment_expr>
+                                    <identifier type="left">indent_level</identifier>
++=
+                                    <integer_literal type="right">1</integer_literal>
+</compound_assignment_expr>
+;</expression_statement>
+}</block>
+
+                              <else_clause type="alternative">else
+                                <block>{
+                                  <expression_statement>
+                                    <assignment_expression>
+                                      <identifier type="left">did_visit_children</identifier>
+=
+                                      <boolean_literal type="right">true</boolean_literal>
+</assignment_expression>
+;</expression_statement>
+
+                                  <let_declaration>let
+                                    <identifier type="pattern">start</identifier>
+=
+                                    <call_expression type="value">
+                                      <field_expression type="function">
+                                        <identifier type="value">node</identifier>
+.
+                                        <field_identifier type="field">start_byte</field_identifier>
+</field_expression>
+
+                                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                                  <let_declaration>let
+                                    <identifier type="pattern">end</identifier>
+=
+                                    <call_expression type="value">
+                                      <field_expression type="function">
+                                        <identifier type="value">node</identifier>
+.
+                                        <field_identifier type="field">end_byte</field_identifier>
+</field_expression>
+
+                                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                                  <let_declaration>let
+                                    <identifier type="pattern">value</identifier>
+=
+                                    <call_expression type="value">
+                                      <field_expression type="function">
+                                        <call_expression type="value">
+                                          <scoped_identifier type="function">
+                                            <scoped_identifier type="path">
+                                              <identifier type="path">std</identifier>
+::
+                                              <identifier type="name">str</identifier>
+</scoped_identifier>
+::
+                                            <identifier type="name">from_utf8</identifier>
+</scoped_identifier>
+
+                                          <arguments type="arguments">(
+                                            <reference_expression>&amp;
+                                              <index_expression type="value">
+                                                <identifier>source_code</identifier>
+[
+                                                <range_expression>
+                                                  <identifier>start</identifier>
+..
+                                                  <identifier>end</identifier>
+</range_expression>
+]</index_expression>
+</reference_expression>
+)</arguments>
+</call_expression>
+.
+                                        <field_identifier type="field">expect</field_identifier>
+</field_expression>
+
+                                      <arguments type="arguments">(
+                                        <string_literal>""</string_literal>
+)</arguments>
+</call_expression>
+;</let_declaration>
+
+                                  <expression_statement>
+                                    <call_expression>
+                                      <field_expression type="function">
+                                        <macro_invocation type="value">
+                                          <identifier type="macro">write</identifier>
+!
+                                          <token_tree>(
+                                            <mutable_specifier>mut</mutable_specifier>
+
+                                            <identifier>stdout</identifier>
+
+                                            <string_literal>""</string_literal>
+
+                                            <identifier>html_escape</identifier>
+
+                                            <identifier>encode_text</identifier>
+
+                                            <token_tree>(
+                                              <identifier>value</identifier>
+)</token_tree>
+)</token_tree>
+</macro_invocation>
+.
+                                        <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                      <arguments type="arguments">(
+                                        <closure_expression>
+                                          <closure_parameters type="parameters">|
+                                            <identifier>err</identifier>
+|</closure_parameters>
+
+                                          <block type="body">{
+                                            <expression_statement>
+                                              <macro_invocation>
+                                                <identifier type="macro">error_exit</identifier>
+!
+                                                <token_tree>(
+                                                  <string_literal>""</string_literal>
+
+                                                  <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+</loop_expression>
+</expression_statement>
+
+            <expression_statement>
+              <call_expression>
+                <field_expression type="function">
+                  <identifier type="value">cursor</identifier>
+.
+                  <field_identifier type="field">reset</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">(
+                  <call_expression>
+                    <field_expression type="function">
+                      <identifier type="value">tree</identifier>
+.
+                      <field_identifier type="field">root_node</field_identifier>
+</field_expression>
+
+                    <arguments type="arguments">()</arguments>
+</call_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+            <expression_statement>
+              <macro_invocation>
+                <identifier type="macro">println</identifier>
+!
+                <token_tree>(
+                  <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+
+      <let_declaration>let
+        <mutable_specifier>mut</mutable_specifier>
+
+        <identifier type="pattern">first_error</identifier>
+=
+        <identifier type="value">None</identifier>
+;</let_declaration>
+
+      <expression_statement>
+        <loop_expression>loop
+          <block type="body">{
+            <let_declaration>let
+              <identifier type="pattern">node</identifier>
+=
+              <call_expression type="value">
+                <field_expression type="function">
+                  <identifier type="value">cursor</identifier>
+.
+                  <field_identifier type="field">node</field_identifier>
+</field_expression>
+
+                <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+            <expression_statement>
+              <if_expression>if
+                <call_expression type="condition">
+                  <field_expression type="function">
+                    <identifier type="value">node</identifier>
+.
+                    <field_identifier type="field">has_error</field_identifier>
+</field_expression>
+
+                  <arguments type="arguments">()</arguments>
+</call_expression>
+
+                <block type="consequence">{
+                  <expression_statement>
+                    <if_expression>if
+                      <binary_expression type="condition">
+                        <call_expression type="left">
+                          <field_expression type="function">
+                            <identifier type="value">node</identifier>
+.
+                            <field_identifier type="field">is_error</field_identifier>
+</field_expression>
+
+                          <arguments type="arguments">()</arguments>
+</call_expression>
+||
+                        <call_expression type="right">
+                          <field_expression type="function">
+                            <identifier type="value">node</identifier>
+.
+                            <field_identifier type="field">is_missing</field_identifier>
+</field_expression>
+
+                          <arguments type="arguments">()</arguments>
+</call_expression>
+</binary_expression>
+
+                      <block type="consequence">{
+                        <expression_statement>
+                          <assignment_expression>
+                            <identifier type="left">first_error</identifier>
+=
+                            <call_expression type="right">
+                              <identifier type="function">Some</identifier>
+
+                              <arguments type="arguments">(
+                                <identifier>node</identifier>
+)</arguments>
+</call_expression>
+</assignment_expression>
+;</expression_statement>
+
+                        <expression_statement>
+                          <break_expression>break</break_expression>
+;</expression_statement>
+}</block>
+
+                      <else_clause type="alternative">else
+                        <block>{
+                          <expression_statement>
+                            <if_expression>if
+                              <unary_expression type="condition">!
+                                <call_expression>
+                                  <field_expression type="function">
+                                    <identifier type="value">cursor</identifier>
+.
+                                    <field_identifier type="field">goto_first_child</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">()</arguments>
+</call_expression>
+</unary_expression>
+
+                              <block type="consequence">{
+                                <expression_statement>
+                                  <break_expression>break</break_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+
+                <else_clause type="alternative">else
+                  <if_expression>if
+                    <unary_expression type="condition">!
+                      <call_expression>
+                        <field_expression type="function">
+                          <identifier type="value">cursor</identifier>
+.
+                          <field_identifier type="field">goto_next_sibling</field_identifier>
+</field_expression>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+</unary_expression>
+
+                    <block type="consequence">{
+                      <expression_statement>
+                        <break_expression>break</break_expression>
+;</expression_statement>
+}</block>
+</if_expression>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+</loop_expression>
+</expression_statement>
+
+      <expression_statement>
+        <if_expression>if
+          <call_expression type="condition">
+            <field_expression type="function">
+              <identifier type="value">first_error</identifier>
+.
+              <field_identifier type="field">is_some</field_identifier>
+</field_expression>
+
+            <arguments type="arguments">()</arguments>
+</call_expression>
+
+          <block type="consequence">{
+            <expression_statement>
+              <if_expression>if
+                <let_condition type="condition">let
+                  <tuple_struct_pattern type="pattern">
+                    <identifier type="type">Some</identifier>
+(
+                    <identifier>node</identifier>
+)</tuple_struct_pattern>
+=
+                  <identifier type="value">first_error</identifier>
+</let_condition>
+
+                <block type="consequence">{
+                  <let_declaration>let
+                    <identifier type="pattern">start</identifier>
+=
+                    <call_expression type="value">
+                      <field_expression type="function">
+                        <identifier type="value">node</identifier>
+.
+                        <field_identifier type="field">start_position</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                  <let_declaration>let
+                    <identifier type="pattern">end</identifier>
+=
+                    <call_expression type="value">
+                      <field_expression type="function">
+                        <identifier type="value">node</identifier>
+.
+                        <field_identifier type="field">end_position</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">()</arguments>
+</call_expression>
+;</let_declaration>
+
+                  <expression_statement>
+                    <call_expression>
+                      <field_expression type="function">
+                        <macro_invocation type="value">
+                          <identifier type="macro">write</identifier>
+!
+                          <token_tree>(
+                            <mutable_specifier>mut</mutable_specifier>
+
+                            <identifier>stdout</identifier>
+
+                            <string_literal>"
+                              <escape_sequence>\t</escape_sequence>
+"</string_literal>
+)</token_tree>
+</macro_invocation>
+.
+                        <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">(
+                        <closure_expression>
+                          <closure_parameters type="parameters">|
+                            <identifier>err</identifier>
+|</closure_parameters>
+
+                          <block type="body">{
+                            <expression_statement>
+                              <macro_invocation>
+                                <identifier type="macro">error_exit</identifier>
+!
+                                <token_tree>(
+                                  <string_literal>""</string_literal>
+
+                                  <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                  <expression_statement>
+                    <if_expression>if
+                      <call_expression type="condition">
+                        <field_expression type="function">
+                          <identifier type="value">node</identifier>
+.
+                          <field_identifier type="field">is_missing</field_identifier>
+</field_expression>
+
+                        <arguments type="arguments">()</arguments>
+</call_expression>
+
+                      <block type="consequence">{
+                        <expression_statement>
+                          <if_expression>if
+                            <call_expression type="condition">
+                              <field_expression type="function">
+                                <identifier type="value">node</identifier>
+.
+                                <field_identifier type="field">is_named</field_identifier>
+</field_expression>
+
+                              <arguments type="arguments">()</arguments>
+</call_expression>
+
+                            <block type="consequence">{
+                              <expression_statement>
+                                <call_expression>
+                                  <field_expression type="function">
+                                    <macro_invocation type="value">
+                                      <identifier type="macro">write</identifier>
+!
+                                      <token_tree>(
+                                        <mutable_specifier>mut</mutable_specifier>
+
+                                        <identifier>stdout</identifier>
+
+                                        <string_literal>""</string_literal>
+
+                                        <identifier>node</identifier>
+
+                                        <identifier>kind</identifier>
+
+                                        <token_tree>()</token_tree>
+)</token_tree>
+</macro_invocation>
+.
+                                    <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                  <arguments type="arguments">(
+                                    <closure_expression>
+                                      <closure_parameters type="parameters">|
+                                        <identifier>err</identifier>
+|</closure_parameters>
+
+                                      <block type="body">{
+                                        <expression_statement>
+                                          <macro_invocation>
+                                            <identifier type="macro">error_exit</identifier>
+!
+                                            <token_tree>(
+                                              <string_literal>""</string_literal>
+
+                                              <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+
+                            <else_clause type="alternative">else
+                              <block>{
+                                <expression_statement>
+                                  <call_expression>
+                                    <field_expression type="function">
+                                      <macro_invocation type="value">
+                                        <identifier type="macro">write</identifier>
+!
+                                        <token_tree>(
+                                          <mutable_specifier>mut</mutable_specifier>
+
+                                          <identifier>stdout</identifier>
+
+                                          <string_literal>"
+                                            <escape_sequence>\"</escape_sequence>
+
+                                            <escape_sequence>\"</escape_sequence>
+"</string_literal>
+
+                                          <identifier>node</identifier>
+
+                                          <identifier>kind</identifier>
+
+                                          <token_tree>()</token_tree>
+
+                                          <identifier>replace</identifier>
+
+                                          <token_tree>(
+                                            <string_literal>"
+                                              <escape_sequence>\n</escape_sequence>
+"</string_literal>
+
+                                            <string_literal>"
+                                              <escape_sequence>\\</escape_sequence>
+"</string_literal>
+)</token_tree>
+)</token_tree>
+</macro_invocation>
+.
+                                      <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                                    <arguments type="arguments">(
+                                      <closure_expression>
+                                        <closure_parameters type="parameters">|
+                                          <identifier>err</identifier>
+|</closure_parameters>
+
+                                        <block type="body">{
+                                          <expression_statement>
+                                            <macro_invocation>
+                                              <identifier type="macro">error_exit</identifier>
+!
+                                              <token_tree>(
+                                                <string_literal>""</string_literal>
+
+                                                <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+}</block>
+
+                      <else_clause type="alternative">else
+                        <block>{
+                          <expression_statement>
+                            <call_expression>
+                              <field_expression type="function">
+                                <macro_invocation type="value">
+                                  <identifier type="macro">write</identifier>
+!
+                                  <token_tree>(
+                                    <mutable_specifier>mut</mutable_specifier>
+
+                                    <identifier>stdout</identifier>
+
+                                    <string_literal>""</string_literal>
+
+                                    <identifier>node</identifier>
+
+                                    <identifier>kind</identifier>
+
+                                    <token_tree>()</token_tree>
+)</token_tree>
+</macro_invocation>
+.
+                                <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                              <arguments type="arguments">(
+                                <closure_expression>
+                                  <closure_parameters type="parameters">|
+                                    <identifier>err</identifier>
+|</closure_parameters>
+
+                                  <block type="body">{
+                                    <expression_statement>
+                                      <macro_invocation>
+                                        <identifier type="macro">error_exit</identifier>
+!
+                                        <token_tree>(
+                                          <string_literal>""</string_literal>
+
+                                          <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+}</block>
+</else_clause>
+</if_expression>
+</expression_statement>
+
+                  <expression_statement>
+                    <call_expression>
+                      <field_expression type="function">
+                        <macro_invocation type="value">
+                          <identifier type="macro">write</identifier>
+!
+                          <token_tree>(
+                            <mutable_specifier>mut</mutable_specifier>
+
+                            <identifier>stdout</identifier>
+
+                            <string_literal>""</string_literal>
+
+                            <identifier>start</identifier>
+
+                            <identifier>row</identifier>
+
+                            <identifier>start</identifier>
+
+                            <identifier>column</identifier>
+
+                            <identifier>end</identifier>
+
+                            <identifier>row</identifier>
+
+                            <identifier>end</identifier>
+
+                            <identifier>column</identifier>
+)</token_tree>
+</macro_invocation>
+.
+                        <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">(
+                        <closure_expression>
+                          <closure_parameters type="parameters">|
+                            <identifier>err</identifier>
+|</closure_parameters>
+
+                          <block type="body">{
+                            <expression_statement>
+                              <macro_invocation>
+                                <identifier type="macro">error_exit</identifier>
+!
+                                <token_tree>(
+                                  <string_literal>""</string_literal>
+
+                                  <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                  <expression_statement>
+                    <call_expression>
+                      <field_expression type="function">
+                        <macro_invocation type="value">
+                          <identifier type="macro">write</identifier>
+!
+                          <token_tree>(
+                            <mutable_specifier>mut</mutable_specifier>
+
+                            <identifier>stdout</identifier>
+
+                            <string_literal>"
+                              <escape_sequence>\n</escape_sequence>
+"</string_literal>
+)</token_tree>
+</macro_invocation>
+.
+                        <field_identifier type="field">unwrap_or_else</field_identifier>
+</field_expression>
+
+                      <arguments type="arguments">(
+                        <closure_expression>
+                          <closure_parameters type="parameters">|
+                            <identifier>err</identifier>
+|</closure_parameters>
+
+                          <block type="body">{
+                            <expression_statement>
+                              <macro_invocation>
+                                <identifier type="macro">error_exit</identifier>
+!
+                                <token_tree>(
+                                  <string_literal>""</string_literal>
+
+                                  <identifier>err</identifier>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</closure_expression>
+)</arguments>
+</call_expression>
+;</expression_statement>
+
+                  <expression_statement>
+                    <macro_invocation>
+                      <identifier type="macro">error_exit</identifier>
+!
+                      <token_tree>(
+                        <string_literal>""</string_literal>
+)</token_tree>
+</macro_invocation>
+;</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+}</block>
+</if_expression>
+</expression_statement>
+}</block>
+</function_item>
+</source_file>
+
