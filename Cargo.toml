@@ -1,0 +1,23 @@
+[package]
+name = "treesitter-simple-cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "treesittercli"
+path = "src/main.rs"
+
+[build-dependencies]
+cc="*"
+
+[dependencies]
+tree-sitter = "0.20.10"
+tree-sitter-rust = "0.20.3"
+tree-sitter-go = "0.19.1"
+tree-sitter-javascript = "0.20"
+tree-sitter-python = "0.20.3"
+tree-sitter-c = "0.20.4"
+tree-sitter-cpp = "0.20.1"
+tree-sitter-java = "0.20.0"
+tree-sitter-swift = "0.3.6"
+tree-sitter-html = "0.19.0"
