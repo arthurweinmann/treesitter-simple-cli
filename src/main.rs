@@ -138,7 +138,6 @@ fn main() {
     let tree = parser.parse(&source_code, None).unwrap_or_else(|| {
         error_exit!("Error occurred: tree is empty");
     });
-    // let root_node = tree.root_node();
 
     let stdout = io::stdout();
     let mut stdout = stdout.lock();
@@ -260,6 +259,19 @@ fn main() {
                             },
                         );
                     }
+                    let start: Point = node.start_position();
+                    let end: Point = node.end_position();
+                    write!(
+                        &mut stdout,
+                        " position=\"([{}, {}] - [{}, {}]\"",
+                        start.row,
+                        start.column,
+                        end.row,
+                        end.column
+                    )
+                    .unwrap_or_else(|err| {
+                        error_exit!("Error occurred: {}", err);
+                    });
                     write!(&mut stdout, ">").unwrap_or_else(|err: io::Error| {
                         error_exit!("Error occurred: {}", err);
                     });
