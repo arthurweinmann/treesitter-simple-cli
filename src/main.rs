@@ -263,7 +263,7 @@ fn main() {
                     let end: Point = node.end_position();
                     write!(
                         &mut stdout,
-                        " position=\"([{}, {}] - [{}, {}]\"",
+                        " position=\"([{}, {}] - [{}, {}])\"",
                         start.row,
                         start.column,
                         end.row,
